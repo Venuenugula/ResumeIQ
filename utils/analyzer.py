@@ -3,7 +3,13 @@ from dotenv import load_dotenv
 import os, json, re, time
 
 load_dotenv()
-client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+def get_api_key():
+    try:
+        import streamlit as st
+        return st.secrets["GEMINI_API_KEY"]
+    except Exception:
+        return os.getenv("GEMINI_API_KEY")
+client = genai.Client(api_key=get_api_key())
 MODEL = "gemini-2.5-flash"
 
 def call_gemini(prompt: str, retries: int = 3) -> str:

@@ -6,7 +6,13 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+def get_api_key():
+    try:
+        import streamlit as st
+        return st.secrets["GEMINI_API_KEY"]
+    except Exception:
+        return os.getenv("GEMINI_API_KEY")
+client = genai.Client(api_key=get_api_key())
 
 class GeminiEmbeddings(Embeddings):
     def embed_documents(self, texts: list[str]) -> list[list[float]]:
